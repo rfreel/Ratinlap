@@ -71,7 +71,9 @@ Ratinlap/
 └── .gitignore
 ```
 
-## Canonical state
+## Format and canonical state
+
+The bootstrap deliberately uses only Markdown, JSON, JSONL, and Python standard library. No database, graph engine, task service, package manager, or framework is required to understand or validate the research state.
 
 Two files are canonical working state:
 
@@ -84,7 +86,7 @@ Canonical files are single-writer surfaces. Parallel research workers do not edi
 
 ## Semantic substrate
 
-The first-pass model uses a deliberately small vocabulary:
+The initial candidate model uses a deliberately small vocabulary:
 
 - THING: identifiable object or concept
 - RELATION: typed connection between elements
@@ -93,7 +95,9 @@ The first-pass model uses a deliberately small vocabulary:
 - POLICY: authorization, visibility, or business-rule constraint
 - EVENT: observable occurrence emitted by or consumed by the system
 
-Do not add a new primitive while an existing one can represent the distinction without loss. Conversely, do not preserve a small vocabulary by forcing observably different behaviors into one primitive.
+This vocabulary is a reconstruction hypothesis, not an authority claim. Do not add a new primitive while an existing one can represent the distinction without loss. Conversely, do not preserve a small vocabulary by forcing observably different behaviors into one primitive.
+
+Before `HIGH_LEVEL_READY`, at least one materially different rival representation must be constructed from the same REQUIRED observations. If a rival expresses the same observable behavior with fewer distinctions, the candidate model must explain why its extra primitive is necessary or remove it.
 
 ## Evidence states
 
@@ -106,6 +110,8 @@ Every reconstruction claim is classified as exactly one of:
 - UNKNOWN: unresolved
 
 `RECONSTRUCTED` consensus does not become `OFFICIAL`. `UNKNOWN` must never be silently promoted to fact.
+
+Third-party source agreement is counted only across lineage-distinct independence groups. Multiple copies, forks, ports, agent-generated descendants, or implementations derived from the same upstream reconstruction count as one independence group unless a discriminating difference establishes otherwise.
 
 ## Agent operating rules
 
@@ -125,6 +131,8 @@ Every reconstruction claim is classified as exactly one of:
 12. A primitive is accepted only if removing or merging it loses a REQUIRED observable distinction.
 13. Workers never write `model/model.json` or `tasks/QUEUE.jsonl`; only the coordinator integrates canonical state.
 14. A task is not DONE until its declared artifact exists and its `done_when` condition is checkable from repository state.
+15. Do not count two reconstructions as independent until source lineage has been checked.
+16. Before closing a decision-changing UNKNOWN, construct the opposite plausible answer and verify whether it changes the model or routing.
 
 ## Cold-start and coordination contract
 
@@ -187,24 +195,26 @@ Rules:
 
 The initial queue will cover:
 
-- inventory known reconstructions
+- discover and lineage-deduplicate existing Foundry/operational-ontology reconstructions
 - inspect `gura105/operational-ontology`
 - inspect `Przyval/openfoundry`
 - inspect `syzygyhack/open-foundry`
 - map official Palantir OSDK/API surface
-- compute shared primitives
+- compute shared observable distinctions
 - record disagreements
+- construct at least one rival representation of the same observations
 - isolate Palantir-specific observable constraints
 - compile `model/model.json` v0
 - enumerate high-value unknowns
-- generate discriminating probes
+- run opposite-outcome tests on decision-changing unknowns
+- generate discriminating probes where needed
 - synthesize the high-level architecture
 
 Each task touching the model names the scope IDs it can change.
 
 ## Source strategy
 
-Start with already-discovered high-value repositories rather than indiscriminate crawling:
+The named repositories are seeds, not the assumed complete corpus:
 
 - `palantir/osdk-ts`
 - `palantir/foundry-platform-typescript`
@@ -214,22 +224,45 @@ Start with already-discovered high-value repositories rather than indiscriminate
 - `Przyval/openfoundry`
 - `syzygyhack/open-foundry`
 
-Each source entry records repository or locator, role, revision when pinned, license, and whether it is official or independent.
+Before deep inspection, perform a bounded prior-art discovery pass using materially different search families such as:
+
+- Palantir Foundry emulator / clone / alternative
+- operational ontology reference implementation
+- Ontology SDK compatible implementation
+- Foundry ObjectSet / action implementation
+
+Stop discovery after two consecutive materially different search families yield no new architecture or REQUIRED behavioral distinction. This is a saturation heuristic, not proof that no other repository exists.
+
+Each source entry records:
+
+- repository or locator
+- role
+- revision when pinned
+- license
+- official versus third-party status
+- `derived_from` when known
+- `independence_group`
+- notes on copied/forked/generated lineage where relevant
+
+A reconstruction's popularity or agreement with another reconstruction does not increase confidence in Palantir behavior unless it contributes an independent observable distinction or points back to OFFICIAL/OBSERVED evidence.
 
 ## Prewalk
 
 Work outside-in:
 
 1. Freeze the REQUIRED scope denominator.
-2. Establish source inventory and provenance.
-3. Coordinator assigns independent source-inspection tasks with disjoint artifact paths.
-4. Workers extract public nouns/types, operations, failures, and transitions without editing canonical model state.
-5. Coordinator compares independent reconstructions and checks proposed shared primitives against official Palantir public surfaces.
-6. Compile the smallest model that explains the REQUIRED observable behavior.
-7. Record disagreements as unknowns rather than averaging them away.
-8. Probe only disagreements whose plausible outcomes could change the high-level model.
-9. Recompute scope coverage.
-10. Stop when remaining unknowns cannot change the core model under any currently plausible answer.
+2. Run bounded prior-art discovery and lineage-deduplicate reconstruction sources.
+3. Establish source inventory and provenance.
+4. Coordinator assigns source-inspection tasks with disjoint artifact paths.
+5. Workers extract public nouns/types, operations, failures, and transitions without editing canonical model state.
+6. Coordinator compares lineage-distinct reconstructions and checks proposed shared distinctions against official Palantir public surfaces.
+7. Compile the smallest candidate model that explains the REQUIRED observable behavior.
+8. Construct a materially different rival representation from the same observations; ablate/merge candidate primitives and identify any lost observable distinction.
+9. Record disagreements as unknowns rather than averaging them away.
+10. For each decision-changing unknown, construct the opposite plausible answer and test whether model structure or routing changes.
+11. Probe only disagreements whose plausible outcomes can change the high-level model.
+12. Recompute scope coverage.
+13. Stop when remaining unknowns cannot change the core model under any currently plausible answer.
 
 ## Acceptance condition
 
@@ -238,11 +271,12 @@ Work outside-in:
 - every REQUIRED scope ID has status `COVERED`, `PARTIAL`, or `UNKNOWN`; none is silently absent
 - every `COVERED` scope ID has at least one OFFICIAL or OBSERVED supporting behavior
 - every major public operation inside a REQUIRED scope has a query/transition interpretation or is explicitly recorded as UNKNOWN
-- every core primitive is necessary for at least one REQUIRED observable distinction
-- independent reconstruction agreements are recorded but are not treated as proof of Palantir internals
+- every core primitive is necessary for at least one REQUIRED observable distinction under ablation/merge testing
+- at least one materially different rival representation has been fit to the same REQUIRED observations and its differences are recorded
+- third-party reconstruction agreements are grouped by lineage and are not treated as proof of Palantir internals
 - reconstruction disagreements are explicit
 - Palantir-specific public constraints are separated from generic operational-ontology structure
-- for every remaining UNKNOWN, plausible alternative answers have been checked for whether they would change the core model
+- for every remaining decision-changing UNKNOWN, the opposite plausible answer has been tested for whether it changes the core model or routing
 - no remaining UNKNOWN can currently change the core primitive set or routing at the high-level target
 - coverage is reported as `covered_required / total_required`, with PARTIAL and UNKNOWN listed separately
 - every DONE task has its artifact and a checkable completion result
@@ -264,8 +298,9 @@ A high coverage percentage alone is insufficient; one unresolved decision-changi
 - ACTIVE tasks have owners
 - DONE task artifacts exist
 - `model/model.json` contains the required top-level keys
-- source manifest entries contain required provenance fields
+- source manifest entries contain required provenance and independence-group fields
 - every REQUIRED scope ID is represented in model coverage state
+- acceptance metadata records the rival-model and opposite-outcome checks before `HIGH_LEVEL_READY` may be true
 
 It does not attempt to prove that the reconstructed architecture is correct.
 
@@ -300,3 +335,11 @@ Counterfactual: a capable agent receives only the repository, or several agents 
 Failure mechanism: the original design named canonical files but did not define who may write them, how tasks are claimed, whether `QUEUE.jsonl` is state or an event log, what a worker must return, or how parallel work avoids write collisions.
 
 Repair: define a five-step cold start, explicit COORDINATOR/WORKER roles, single-writer canonical state, one-current-record-per-task queue semantics, artifact ownership, dependency/claim rules, and a minimal worker handoff object. This preserves parallel source inspection without adding an orchestration service.
+
+### Round 3 — correlated consensus + self-confirming model
+
+Counterfactual: every selected reconstruction agrees and `HIGH_LEVEL_READY` passes, but the agreement is caused by shared ancestry, copied code, common documentation, or the candidate model interpreting all evidence through its own primitives. A genuinely different representation would reveal that one "necessary" primitive is merely a modeling preference.
+
+Failure mechanism: the design initially treated named repositories as if they were independent and treated the THING/RELATION/TRANSITION-family substrate as the frame used to judge its own sufficiency. This can create false confidence from correlated sources and a self-certifying ontology.
+
+Repair: make named repositories seeds rather than the corpus, perform bounded prior-art discovery, record source lineage and independence groups, count consensus only across lineage-distinct sources, treat the semantic substrate as a candidate hypothesis, require a materially different rival representation, ablate/merge primitives, and invert every decision-changing UNKNOWN before closure.
