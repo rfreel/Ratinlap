@@ -1,0 +1,9 @@
+{
+  "command": "/opt/pyvenv/bin/python -m unittest compat.test_server -v",
+  "output": "test_access_and_transport_errors_remain_distinct (compat.test_server.DispatcherTests.test_access_and_transport_errors_remain_distinct) ... ok\ntest_action_validate_only_invalid_execute_and_edits (compat.test_server.DispatcherTests.test_action_validate_only_invalid_execute_and_edits) ... ok\ntest_aggregate_count_and_sum (compat.test_server.DispatcherTests.test_aggregate_count_and_sum) ... ok\ntest_all_supported_objectset_variants_use_existing_runtime (compat.test_server.DispatcherTests.test_all_supported_objectset_variants_use_existing_runtime) ... ok\ntest_link_route (compat.test_server.DispatcherTests.test_link_route) ... ok\ntest_load_rejects_paging_and_unsupported_query (compat.test_server.DispatcherTests.test_load_rejects_paging_and_unsupported_query) ... ok\ntest_object_type_list_and_get (compat.test_server.DispatcherTests.test_object_type_list_and_get) ... ok\ntest_page_size_never_silently_truncates_without_next_token (compat.test_server.DispatcherTests.test_page_size_never_silently_truncates_without_next_token) ... ok\ntest_all_seven_routes_over_http (compat.test_server.HttpTests.test_all_seven_routes_over_http) ... ok\ntest_invalid_json_is_transport_error (compat.test_server.HttpTests.test_invalid_json_is_transport_error) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.510s\n\nOK",
+  "returncode": 0,
+  "schema_version": "0.1",
+  "seven_routes_exercised": true,
+  "status": "PASS",
+  "target": "API_SLICE_READY"
+}
