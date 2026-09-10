@@ -80,6 +80,8 @@ Two files are canonical working state:
 
 Everything else constrains, sources, tests, or projects those files. A document may explain canonical state but may not silently override it.
 
+Canonical files are single-writer surfaces. Parallel research workers do not edit them directly; a coordinator integrates completed task artifacts. This keeps the repository simple without requiring a database, lock service, or orchestration framework.
+
 ## Semantic substrate
 
 The first-pass model uses a deliberately small vocabulary:
@@ -121,6 +123,42 @@ Every reconstruction claim is classified as exactly one of:
 10. External writes or probes require explicit authorization for that target.
 11. Never claim coverage without naming the scope denominator.
 12. A primitive is accepted only if removing or merging it loses a REQUIRED observable distinction.
+13. Workers never write `model/model.json` or `tasks/QUEUE.jsonl`; only the coordinator integrates canonical state.
+14. A task is not DONE until its declared artifact exists and its `done_when` condition is checkable from repository state.
+
+## Cold-start and coordination contract
+
+A new agent must be able to recover the project without chat context.
+
+Cold-start order:
+
+1. read `AGENTS.md`
+2. read `contracts/SCOPE.md`, `contracts/SEMANTICS.md`, and `contracts/ACCEPTANCE.md`
+3. read `tasks/QUEUE.jsonl`
+4. read only the source/model files named by the selected task
+5. execute one task to its declared artifact and completion condition
+
+Roles are intentionally minimal:
+
+- COORDINATOR: owns writes to `tasks/QUEUE.jsonl` and `model/model.json`, assigns/claims work, validates task artifacts, integrates model changes, and runs `scripts/check.py`
+- WORKER: reads canonical state, produces only the artifact named by its assigned task, and returns proposed distinctions/unknowns to the coordinator
+
+If no coordinator is explicitly running, one agent may perform both roles serially. Parallel execution is allowed only when workers have disjoint artifact paths and no canonical writes.
+
+A worker completion must return:
+
+```json
+{
+  "task_id": "T001",
+  "artifact": "reconstructions/example.md",
+  "observed_distinctions": [],
+  "proposed_model_changes": [],
+  "new_unknowns": [],
+  "done_when_result": "PASS"
+}
+```
+
+This return object is a handoff contract, not a third canonical state store.
 
 ## Task state machine
 
@@ -130,11 +168,22 @@ READY -> ACTIVE -> DONE
              \-> UNKNOWN -> READY
 ```
 
+`tasks/QUEUE.jsonl` contains exactly one current record per task ID. It is not an event log and is rewritten by the coordinator when task state changes.
+
 A task record contains at minimum:
 
 ```json
-{"id":"T001","state":"READY","depends_on":[],"deliverable":"...","done_when":"...","scope_ids":[]}
+{"id":"T001","state":"READY","depends_on":[],"artifact":"...","deliverable":"...","done_when":"...","scope_ids":[],"owner":null}
 ```
+
+Rules:
+
+- an ACTIVE task has a non-null owner
+- a READY task may be claimed only when all dependencies are DONE
+- two tasks intended for parallel execution must not share an artifact path
+- DONE requires the artifact to exist and `done_when` to pass
+- BLOCKED names an external dependency or authorization boundary
+- UNKNOWN names the unresolved distinction and may return to READY only when a discriminator becomes available
 
 The initial queue will cover:
 
@@ -173,15 +222,14 @@ Work outside-in:
 
 1. Freeze the REQUIRED scope denominator.
 2. Establish source inventory and provenance.
-3. Extract public nouns/types.
-4. Extract operations, failures, and transitions.
-5. Compare independent reconstructions.
-6. Check every proposed shared primitive against official Palantir public surfaces.
-7. Compile the smallest model that explains the REQUIRED observable behavior.
-8. Record disagreements as unknowns rather than averaging them away.
-9. Probe only disagreements whose plausible outcomes could change the high-level model.
-10. Recompute scope coverage.
-11. Stop when remaining unknowns cannot change the core model under any currently plausible answer.
+3. Coordinator assigns independent source-inspection tasks with disjoint artifact paths.
+4. Workers extract public nouns/types, operations, failures, and transitions without editing canonical model state.
+5. Coordinator compares independent reconstructions and checks proposed shared primitives against official Palantir public surfaces.
+6. Compile the smallest model that explains the REQUIRED observable behavior.
+7. Record disagreements as unknowns rather than averaging them away.
+8. Probe only disagreements whose plausible outcomes could change the high-level model.
+9. Recompute scope coverage.
+10. Stop when remaining unknowns cannot change the core model under any currently plausible answer.
 
 ## Acceptance condition
 
@@ -197,6 +245,7 @@ Work outside-in:
 - for every remaining UNKNOWN, plausible alternative answers have been checked for whether they would change the core model
 - no remaining UNKNOWN can currently change the core primitive set or routing at the high-level target
 - coverage is reported as `covered_required / total_required`, with PARTIAL and UNKNOWN listed separately
+- every DONE task has its artifact and a checkable completion result
 - `scripts/check.py` passes repository structural checks
 
 A high coverage percentage alone is insufficient; one unresolved decision-changing scope item blocks `HIGH_LEVEL_READY`.
@@ -211,6 +260,9 @@ A high coverage percentage alone is insufficient; one unresolved decision-changi
 - task dependencies refer to existing tasks
 - allowed task/evidence/scope states only
 - task scope IDs refer to declared scope IDs
+- task artifact paths are unique among concurrently runnable tasks
+- ACTIVE tasks have owners
+- DONE task artifacts exist
 - `model/model.json` contains the required top-level keys
 - source manifest entries contain required provenance fields
 - every REQUIRED scope ID is represented in model coverage state
@@ -240,3 +292,11 @@ Counterfactual: the repository passes every original acceptance bullet while sti
 Failure mechanism: terms such as "major public concept" and "major public operation" had no denominator; completion could be achieved by narrowing attention after the fact. Consensus among third-party reconstructions could also be mistaken for evidence about Palantir.
 
 Repair: freeze an explicit REQUIRED scope denominator, make coverage countable, require OFFICIAL/OBSERVED support for covered Palantir behavior, test whether unknowns can change the core model, and separate bootstrap completion from semantic completion.
+
+### Round 2 — amnesia + parallel collision
+
+Counterfactual: a capable agent receives only the repository, or several agents execute the queue concurrently. All follow the written rules yet either cannot determine how to proceed from a cold start or overwrite shared canonical files while producing individually valid work.
+
+Failure mechanism: the original design named canonical files but did not define who may write them, how tasks are claimed, whether `QUEUE.jsonl` is state or an event log, what a worker must return, or how parallel work avoids write collisions.
+
+Repair: define a five-step cold start, explicit COORDINATOR/WORKER roles, single-writer canonical state, one-current-record-per-task queue semantics, artifact ownership, dependency/claim rules, and a minimal worker handoff object. This preserves parallel source inspection without adding an orchestration service.
