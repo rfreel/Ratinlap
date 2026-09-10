@@ -1,0 +1,16 @@
+{
+  "scenarios": [
+    {"description":"Definition/instance identity and typed properties remain distinct.","id":"definition-state","scopes":["S01","S02"],"status":"PASS"},
+    {"description":"Typed link traversal and cardinality are explicit.","id":"relation-traversal","scopes":["S03"],"status":"PASS"},
+    {"description":"ObjectSet composes before explicit materialization and supports aggregation.","id":"objectset-composition","scopes":["S04"],"status":"PASS"},
+    {"description":"Validate-only differs from execution; access, parameter, and domain failures do not collapse.","id":"action-modes-failures","scopes":["S05","S07"],"status":"PASS"},
+    {"description":"Named computation is represented separately from action mutation.","id":"compute","scopes":["S06"],"status":"PASS"},
+    {"description":"Subscriptions and loading/reloading/failure states remain explicit.","id":"observe-async","scopes":["S08"],"status":"PASS"},
+    {"description":"Ontology-bound and broader platform clients remain distinct facades.","id":"client-boundary","scopes":["S09"],"status":"PASS"},
+    {"description":"Application bridge carries explicit async values and configured event execution.","id":"application-bridge","scopes":["S10"],"status":"PASS"}
+  ],
+  "schema_version": "0.1",
+  "status": "PASS",
+  "summary": {"covered_scopes":10,"failed":0,"missing_scopes":[],"passed":8,"required_scopes":10},
+  "target": "EXECUTABLE_CORE_READY"
+}
