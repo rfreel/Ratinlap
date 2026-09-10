@@ -2,8 +2,8 @@
   {
     "locator": "palantir/osdk-ts",
     "role": "official_sdk",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "aec9d54682aef9497dbbc593ddec50d345567702",
+    "license": "Apache-2.0 (public package declarations/source headers)",
     "status": "OFFICIAL",
     "derived_from": [],
     "independence_group": "official-palantir"
@@ -11,8 +11,8 @@
   {
     "locator": "palantir/foundry-platform-typescript",
     "role": "official_sdk",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "d1fbe480fa7d22c13862d90946d06f8910871570",
+    "license": "Apache-2.0 (public generated packages/source headers)",
     "status": "OFFICIAL",
     "derived_from": [],
     "independence_group": "official-palantir"
@@ -20,8 +20,8 @@
   {
     "locator": "palantir/ontology-starter-react-app",
     "role": "official_reference_app",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "7b31d4be74d4e584370afa795ae8520aaa2793db",
+    "license": "UNLICENSED (package.json)",
     "status": "OFFICIAL",
     "derived_from": [],
     "independence_group": "official-palantir"
@@ -29,8 +29,8 @@
   {
     "locator": "palantir/workshop-iframe-custom-widget",
     "role": "official_integration",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "de1ce669f01df4d11f05db8ec79e81daab129230",
+    "license": "Palantir License",
     "status": "OFFICIAL",
     "derived_from": [],
     "independence_group": "official-palantir"
@@ -38,8 +38,8 @@
   {
     "locator": "gura105/operational-ontology",
     "role": "minimal_reference_reconstruction",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "1a92960d67a890baa79cfd9043b83c3bc394eddb",
+    "license": "MIT",
     "status": "RECONSTRUCTED",
     "derived_from": [],
     "independence_group": "gura105-operational-ontology"
@@ -47,8 +47,8 @@
   {
     "locator": "Przyval/openfoundry",
     "role": "foundry_api_emulator",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "67da90e6e28200e57079719699566a224f1805cb",
+    "license": "Apache-2.0",
     "status": "RECONSTRUCTED",
     "derived_from": [],
     "independence_group": "przyval-openfoundry"
@@ -56,10 +56,37 @@
   {
     "locator": "syzygyhack/open-foundry",
     "role": "independent_operational_platform",
-    "revision": "UNPINNED",
-    "license": "UNVERIFIED",
+    "revision": "1d7e1aa62208d32ed91d358f4503cf2d95523a7e",
+    "license": "Apache-2.0",
     "status": "RECONSTRUCTED",
     "derived_from": [],
     "independence_group": "syzygyhack-open-foundry"
+  },
+  {
+    "locator": "pkupt/Ontic",
+    "role": "independent_foundry_reimplementation_crosscheck",
+    "revision": "191a4d90fb116ea5ef354eeee8def653a0116e13",
+    "license": "MIT",
+    "status": "RECONSTRUCTED",
+    "derived_from": [],
+    "independence_group": "pkupt-ontic"
+  },
+  {
+    "locator": "Aryan1718/operational-ontology",
+    "role": "independent_operational_ontology_crosscheck",
+    "revision": "e94a6ae4f8a128a19804ed31a63786dc2c43be64",
+    "license": "NO_LICENSE_FILE_FOUND",
+    "status": "RECONSTRUCTED",
+    "derived_from": [],
+    "independence_group": "aryan1718-operational-ontology"
+  },
+  {
+    "locator": "fstech-digital/operational-ontology-framework",
+    "role": "conceptual_rival_reference",
+    "revision": "3df5d896da2a1e488e1eb325feddf190ad77990d",
+    "license": "FSTech Public Reference License 1.1",
+    "status": "RECONSTRUCTED",
+    "derived_from": [],
+    "independence_group": "fstech-dla-reference"
   }
 ]
