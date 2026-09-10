@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "status": "RECONSTRUCTING",
+  "status": "HIGH_LEVEL_READY",
   "primitives": ["DEFINITION", "STATE", "OPERATION", "CONSTRAINT"],
   "concepts": [
     {"id":"ontology","role":"DEFINITION","evidence":"OFFICIAL","scope_ids":["S01","S09"]},
@@ -81,8 +81,8 @@
   ],
   "acceptance": {
     "bootstrap_complete": true,
-    "high_level_ready": false,
+    "high_level_ready": true,
     "rival_model_checked": true,
-    "opposite_outcome_checks_complete": false
+    "opposite_outcome_checks_complete": true
   }
 }
