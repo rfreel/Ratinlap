@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "status": "BOOTSTRAP",
+  "primitives": ["THING", "RELATION", "TRANSITION", "QUERY", "POLICY", "EVENT"],
+  "concepts": [],
+  "relations": [],
+  "operations": [],
+  "states": [],
+  "invariants": [],
+  "coverage": [
+    {"scope_id": "S01", "status": "UNKNOWN"},
+    {"scope_id": "S02", "status": "UNKNOWN"},
+    {"scope_id": "S03", "status": "UNKNOWN"},
+    {"scope_id": "S04", "status": "UNKNOWN"},
+    {"scope_id": "S05", "status": "UNKNOWN"},
+    {"scope_id": "S06", "status": "UNKNOWN"},
+    {"scope_id": "S07", "status": "UNKNOWN"},
+    {"scope_id": "S08", "status": "UNKNOWN"},
+    {"scope_id": "S09", "status": "UNKNOWN"},
+    {"scope_id": "S10", "status": "UNKNOWN"}
+  ],
+  "acceptance": {
+    "bootstrap_complete": true,
+    "high_level_ready": false,
+    "rival_model_checked": false,
+    "opposite_outcome_checks_complete": false
+  }
+}

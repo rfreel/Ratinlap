@@ -1,0 +1,65 @@
+[
+  {
+    "locator": "palantir/osdk-ts",
+    "role": "official_sdk",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "OFFICIAL",
+    "derived_from": [],
+    "independence_group": "official-palantir"
+  },
+  {
+    "locator": "palantir/foundry-platform-typescript",
+    "role": "official_sdk",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "OFFICIAL",
+    "derived_from": [],
+    "independence_group": "official-palantir"
+  },
+  {
+    "locator": "palantir/ontology-starter-react-app",
+    "role": "official_reference_app",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "OFFICIAL",
+    "derived_from": [],
+    "independence_group": "official-palantir"
+  },
+  {
+    "locator": "palantir/workshop-iframe-custom-widget",
+    "role": "official_integration",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "OFFICIAL",
+    "derived_from": [],
+    "independence_group": "official-palantir"
+  },
+  {
+    "locator": "gura105/operational-ontology",
+    "role": "minimal_reference_reconstruction",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "RECONSTRUCTED",
+    "derived_from": [],
+    "independence_group": "gura105-operational-ontology"
+  },
+  {
+    "locator": "Przyval/openfoundry",
+    "role": "foundry_api_emulator",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "RECONSTRUCTED",
+    "derived_from": [],
+    "independence_group": "przyval-openfoundry"
+  },
+  {
+    "locator": "syzygyhack/open-foundry",
+    "role": "independent_operational_platform",
+    "revision": "UNPINNED",
+    "license": "UNVERIFIED",
+    "status": "RECONSTRUCTED",
+    "derived_from": [],
+    "independence_group": "syzygyhack-open-foundry"
+  }
+]
