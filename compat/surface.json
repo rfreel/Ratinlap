@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "target": "FOUNDRY_SHAPED_API_SLICE",
+  "official_source": {
+    "repository": "palantir/foundry-platform-typescript",
+    "revision": "d1fbe480fa7d22c13862d90946d06f8910871570"
+  },
+  "routes": [
+    {"method":"GET","path":"/v2/ontologies/{ontology}/objectTypes/{objectType}","source":"packages/foundry.ontologies/src/public/ObjectTypeV2.ts"},
+    {"method":"GET","path":"/v2/ontologies/{ontology}/objects/{objectType}","source":"packages/foundry.ontologies/src/public/OntologyObjectV2.ts"},
+    {"method":"GET","path":"/v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}","source":"packages/foundry.ontologies/src/public/OntologyObjectV2.ts"},
+    {"method":"GET","path":"/v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/links/{linkType}","source":"packages/foundry.ontologies/src/public/LinkedObjectV2.ts"},
+    {"method":"POST","path":"/v2/ontologies/{ontology}/objectSets/loadObjects","source":"packages/foundry.ontologies/src/public/OntologyObjectSet.ts"},
+    {"method":"POST","path":"/v2/ontologies/{ontology}/objectSets/aggregate","source":"packages/foundry.ontologies/src/public/OntologyObjectSet.ts"},
+    {"method":"POST","path":"/v2/ontologies/{ontology}/actions/{action}/apply","source":"packages/foundry.ontologies/src/public/Action.ts"}
+  ],
+  "object_set_variants": {
+    "base":{"required":["type","objectType"]},
+    "filter":{"required":["type","objectSet","where"]},
+    "union":{"required":["type","objectSets"]},
+    "intersect":{"required":["type","objectSets"]},
+    "subtract":{"required":["type","objectSets"]},
+    "searchAround":{"required":["type","objectSet","link"]}
+  },
+  "search_query_variants": {
+    "eq":{"required":["type","field","value"]}
+  },
+  "action": {
+    "modes":["VALIDATE_ONLY","VALIDATE_AND_EXECUTE"],
+    "return_edits":["NONE","ALL_V2_WITH_DELETIONS"],
+    "validation_results":["VALID","INVALID"]
+  },
+  "compat_scaffolding": {
+    "actor_header":"X-Ratinlap-Actor",
+    "default_actor":"viewer"
+  },
+  "deferred": [
+    "OAuth token validation and Foundry scope enforcement",
+    "pagination and nextPageToken semantics",
+    "full SearchJsonQueryV2 grammar",
+    "aggregate groupBy and aggregation types beyond count/sum",
+    "ObjectSet reference/static/asType/interface/nearest-neighbor variants",
+    "applyBatch and async action execution",
+    "exact public error payload taxonomy",
+    "exact object RID and metadata population",
+    "null/vector/property-security loading rules",
+    "storage-version consistency semantics",
+    "transactions, branches and scenarios"
+  ],
+  "load_objects": {
+    "required":["objectSet","select"],
+    "optional":["pageSize","pageToken"],
+    "paging_policy":"pageToken rejected; pageSize accepted only when response fits in one page"
+  },
+  "aggregate": {
+    "required":["objectSet","aggregation","groupBy"],
+    "aggregation_shape":"AggregationV2[]",
+    "supported_metric_types":["count","sum"],
+    "groupBy":"must be [] in this slice",
+    "response_shape":"{accuracy:\"ACCURATE\",data:[{group:{},metrics:[{name,value}]}]}"
+  }
+}
