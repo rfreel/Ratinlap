@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Python ${{ matrix.python-version }} checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate repository structure
+        run: python scripts/check.py .
+      - name: Test validator, semantic runtime, and HTTP compatibility
+        run: python -m unittest scripts.test_check runtime.test_reference compat.test_server -v
+      - name: Run required-scope semantic scenarios
+        run: python scripts/run_reference.py
